@@ -1,0 +1,42 @@
+<%- include('layout.ejs'); %>
+
+<h1>Discutez avec vos amis !</h1>
+
+    <a href="http://localhost:4000/room/create">Créer un chat</a>
+
+
+    <main>
+
+        <!-- boucle d'affichage de tous les salons -->
+        <% for(var i=0; i<rooms.length; i++) {%>
+            <li><a href='/room/<%=rooms[i]._id %>'' 
+                >
+                 <%= rooms[i].name %>
+            </a></li>
+         <% } %>
+
+
+        
+    </main>
+
+    <script>
+        
+        //corrige le bug ACCESS-COntroll-Allow-Origin
+        //importe le module socket.io-client      
+        var socket = io.connect('http://localhost:4000');
+    
+        document.querySelector('.button').addEventListener('click', function(){
+            console.log('submit socket');
+            let mess = document.querySelector('.message').value;
+            socket.emit('chat-message', {pseudo : pseudonyme, message : mess });
+        });  
+
+        socket.on('chat-message', function(data){
+            document.body.innerHTML+='<div><span>'+data.pseudo+'</span><div>'+data.message+'</div></div>';
+        });
+
+
+
+    </script>
+
+<script type="module"></script>

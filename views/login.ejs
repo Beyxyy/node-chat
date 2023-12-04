@@ -1,0 +1,20 @@
+<!-- fais une page de login avec username et password-->
+<!DOCTYPE html>
+<%- include('layout.ejs'); %>
+
+    <h1>Inscription</h1>
+    <form action="/login" method="post">
+      <label for="username">email</label>
+      <input type="text" id="username" name="email" required><br>
+
+      <label for="password">Mot de passe:</label>
+      <input type="password" id="password" name="password" required><br>
+
+      <input type="submit" value="Se connecter">
+
+    </form>
+    <a href="/register">Je n'ai pas de compte</a>
+  </body>
+</html>
+
+

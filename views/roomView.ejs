@@ -1,0 +1,34 @@
+<%- include('layout.ejs'); %>
+
+<h1>Bienvenue sur <%= room.name %></h1>
+
+<% for(var i=0; i<messages.length; i++) {%>
+    <div><span><%= messages[i].user %></span><div><%= messages[i].message %></div></div>
+ <% } %>
+
+
+    <div class="form-control">
+        <label for="message">Message
+        <input type="text" name="message">
+        <button class="button">Envoyer</button>
+    </label>
+    </div>
+
+        <script>
+            var socket = io.connect('http://localhost:4000');
+            socket.emit('authenticate', '');
+            document.querySelector('.button').addEventListener('click', function(){
+                console.log('submit socket');
+                let mess = document.querySelector('.message').value;
+                socket.emit('authenticate', {message : mess });
+                document.querySelector('.message').value ='';
+            });  
+
+            socket.on('chat-message', function(data){
+                document.body.innerHTML+='<div><span>'+data.pseudo+'</span><div>'+data.message+'</div></div>';
+            });
+        </script>
+
+
+
+

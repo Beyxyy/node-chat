@@ -1,0 +1,18 @@
+<%- include('layout.ejs'); %>
+
+<h1>Créer un nouveau salon</h1>
+
+<form action="/room/create" method="post">
+    <div class="form-control">
+        <label for="name">Nom du salon
+        <input type="text" name="name">
+
+        <!-- affichage du message défini dans le controller si il est défini-->
+        <% if (message !='' ) { %>
+            <p class="bg-danger text-white"><%= message %></p>
+        <% } %>
+
+
+    </label>
+    </div>
+</form>

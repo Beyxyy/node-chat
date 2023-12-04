@@ -1,28 +1,8 @@
-// Ajoutez des fonctions pour la gestion des utilisateurs,l'authentification, et l'inscription
-var crypto = require('crypto');
 const User = require('../models/user.js');
 const bcrypt = require("bcryptjs");
 LocalStrategy = require("passport-local").Strategy;
-const passport = require('passport');
-const { isSet } = require('util/types');
 
-
-// affichage de la 
-exports.LoginView = (req, res) => {
-    res.render('../views/login.ejs', {
-
-    });
-};
-
-
-// affichage de la vue register
-exports.RegisterView = (req, res) => {
-    res.render('../views/register.ejs', {
-
-    });
-  }
-
-exports.RegisterUser = (req, res) => {
+exports.ProcessRegister = (req, res) => {
     const { pseudo, email, password, confirm } = req.body;
     if (!pseudo || !email || !password || !confirm) {
       console.log("Fill empty fields");
@@ -48,8 +28,6 @@ exports.RegisterUser = (req, res) => {
             email,
             password,
           });
-
-          console.log(newUser.password);
           //Password Hashing
           bcrypt.genSalt(10, (err, salt) =>
             bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -64,22 +42,43 @@ exports.RegisterUser = (req, res) => {
         }
       });
   };
-}
-
-exports.LoginUser = (req, res, next) => {
-    passport.authenticate('local', {
-        successRedirect: '/chat',
-        failureRedirect: '/login',
-        failureFlash: true
-    })(req, res, next);
-}
+};
 
 
 
 
-
-// module.exports = {LoginUser, RegisterUser};
-
-
-
-
+exports.ProcessLogin = passport => {
+  passport.use(
+    new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
+      //Check customer
+      User.findOne({ email: email })
+        .then((user) => {
+          if (!user) {
+            console.log("wrong email");
+            return done();
+          }
+          //Match Password
+          bcrypt.compare(password, user.password, (error, isMatch) => {
+            if (error) throw error;
+            if (isMatch) {
+              return done(null, user);
+            } else {
+              console.log("Wrong password");
+              return done();
+            }
+          });
+        })
+        .catch((error) => console.log(error));
+    })
+  );
+  passport.serializeUser((user, done) => {
+    done(null, user.id);
+  });
+  passport.deserializeUser((id, done) => {
+    User.findById(id)
+    .then((user) => {
+      done(null, user);
+    })
+    .catch((error) => done(error));
+  });
+};

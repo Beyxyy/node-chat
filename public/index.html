@@ -4,40 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+<!-- récupèration du module socket.io sur mon backend sur l'adresse localhost -->
+    <script src="http://localhost:4000/socket.io/socket.io.js"></script>
 </head>
 <body>
 
-    <input type="text" class='pseudo' placeholder="votre message">
-    <input type="text" class="message" placeholder="votre message">
-    <div class="button">click</div>
-    <script type="module">
-
-        //corrige le bug ACCESS-COntroll-Allow-Origin
-        
-       
-
-
-
-
-        //importe le module socket.io-client      
-        var socket = io.connect('http://localhost:3000');
     
-        document.querySelector('.button').addEventListener('click', function(){
-            let mess = document.querySelector('.message').value;
-            let pseudonyme = document.querySelector('.pseudo').value;
-            console.log(mess, pseudonyme);
-            socket.emit('chat-message', {pseudo : pseudonyme, message : mess });
-        });  
-
-        socket.on('chat-message', function(data){
-            document.body.innerHTML+='<div><span>'+data.pseudo+'</span><div>'+data.message+'</div></div>';
-        });
-
-
-
-    </script>
     
 </body>
 </html>
